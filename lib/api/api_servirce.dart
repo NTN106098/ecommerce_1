@@ -11,7 +11,7 @@ class ApiServices {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
             },
-            body: json.encode(data))
+            body: data)
         .timeout(Duration(seconds: 30), onTimeout: () {
       throw TimeoutException('Time out');
     });

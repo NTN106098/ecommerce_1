@@ -9,7 +9,7 @@ import 'package:ecommerce_app_fhh_02/widgets/round_button.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/utils.dart';
 
-String Linhvuc { 'bacsi', "duocsi", "nhathuoc", "phongkham" }
+enum Linhvuc { bacsi, duocsi, nhathuoc, phongkham }
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -72,7 +72,7 @@ class _BodyState extends State<Body> {
       ApiServices().post(
           ApiUrl.LINK_API_SIGN_UP,
           RequestAPP.signUpRequest(
-              fullName: nameController.text.trim(),
+              name: nameController.text.trim(),
               phone: phoneController.text.trim(),
               is_style: _linhvuc,
               birthday: dayController.text.trim() +
@@ -83,9 +83,7 @@ class _BodyState extends State<Body> {
     }
   }
 
-  Linhvuc _linhvuc = 'bacsi'; // lv = {
-  //   'Linhvuc.bacsi': 'bacsi'
-  // }
+  String _linhvuc = 'bacsi';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -192,14 +190,14 @@ class _BodyState extends State<Body> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              MyRadioListTile<Linhvuc>(
+                              MyRadioListTile(
                                 value: 'bacsi',
                                 groupValue: _linhvuc,
                                 // leading: 'A',
                                 title: Text('Bác Sĩ'),
                                 onChanged: setNhomNganh,
                               ),
-                              MyRadioListTile<Linhvuc>(
+                              MyRadioListTile(
                                 value: 'duocsi',
                                 groupValue: _linhvuc,
                                 // leading: 'B',
@@ -216,14 +214,14 @@ class _BodyState extends State<Body> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              MyRadioListTile<Linhvuc>(
+                              MyRadioListTile(
                                 value: 'nhathuoc',
                                 groupValue: _linhvuc,
                                 // leading: 'C',
                                 title: Text('Nhà Thuốc'),
                                 onChanged: setNhomNganh,
                               ),
-                              MyRadioListTile<Linhvuc>(
+                              MyRadioListTile<String>(
                                 value: 'phongkham',
                                 groupValue: _linhvuc,
                                 // leading: 'D',
@@ -328,7 +326,7 @@ class _BodyState extends State<Body> {
               // loading: provider.loading,
               onPress: () {
                 print(RequestAPP.signUpRequest(
-                    fullName: nameController.text.trim(),
+                    name: nameController.text.trim(),
                     phone: phoneController.text.trim(),
                     is_style: _linhvuc.toString(),
                     birthday: dayController.text.trim() +
@@ -398,10 +396,11 @@ class _BodyState extends State<Body> {
     ));
   }
 
-  void setNhomNganh(value) => setState(() {
-        _linhvuc = value;
-        print(value);
-      });
+  void setNhomNganh(value) {
+    setState(() {
+      _linhvuc = value;
+    });
+  }
 
   final Validation _validation = Validation(1);
 
