@@ -1,10 +1,15 @@
-import 'package:ecommerce_app_fhh_02/signup_view/components/input_birthday.dart';
+import 'package:ecommerce_app_fhh_02/api/api_link.dart';
+import 'package:ecommerce_app_fhh_02/api/api_servirce.dart';
+import 'package:ecommerce_app_fhh_02/models/request.dart';
+import 'package:ecommerce_app_fhh_02/models/validatation.dart';
 import 'package:ecommerce_app_fhh_02/signup_view/components/radio_button.dart';
 import 'package:ecommerce_app_fhh_02/widgets/input_text_field.dart';
+import 'package:ecommerce_app_fhh_02/widgets/my_text_field.dart';
 import 'package:ecommerce_app_fhh_02/widgets/round_button.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import '../../../utils/utils.dart';
+
+String Linhvuc { 'bacsi', "duocsi", "nhathuoc", "phongkham" }
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -15,33 +20,23 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final _formKey = GlobalKey<FormState>();
-  final _keyboard = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0'];
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
 
   final nameFocusNode = FocusNode();
   final phoneFocusNode = FocusNode();
 
-  // final MyTextController _nameSate = MyTextController();
-  // final MyTextController _phoneState = MyTextController();
+  final phoneState = MyTextController();
 
-  // final _email = TextField();
+  final dayController = TextEditingController();
+  final monthController = TextEditingController();
+  final yearController = TextEditingController();
+
+  final dayFocusNode = FocusNode();
+  final monthFocusNode = FocusNode();
+  final yearFocusNode = FocusNode();
+
   final List<String> errors = [];
-  // final Validation _validation = Validation(2);
-
-  // _signup() {}
-
-  // bool validate() {
-  //   _validation.clearError(_nameSate, 1);
-  //   _validation.clearError(_phoneState, 2);
-
-  //   bool validate = true;
-
-  //    if (_nameController.text.trim().isEmpty) {
-  //     _validation.showError(_nameState, getTranslated(context, 'cannot_empty'), 1);
-  //     validation = false;
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -50,6 +45,12 @@ class _BodyState extends State<Body> {
 
     phoneController.dispose();
     phoneFocusNode.dispose();
+    dayController.dispose();
+    monthController.dispose();
+    yearController.dispose();
+    dayFocusNode.dispose();
+    monthFocusNode.dispose();
+    yearFocusNode.dispose();
   }
 
   void addError({required String error}) {
@@ -66,22 +67,25 @@ class _BodyState extends State<Body> {
       });
   }
 
-  void login(int phone, String name) async {
-    try {
-      Response response = await post(
-          Uri.parse('https://duocgiasi.com/login/register'),
-          body: {'name': name, 'phone': phone});
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print('account created successf');
-      } else {
-        print('faild');
-      }
-    } catch (e) {
-      print(e.toString());
+  _signUp() {
+    if (validate()) {
+      ApiServices().post(
+          ApiUrl.LINK_API_SIGN_UP,
+          RequestAPP.signUpRequest(
+              fullName: nameController.text.trim(),
+              phone: phoneController.text.trim(),
+              is_style: _linhvuc,
+              birthday: dayController.text.trim() +
+                  '/' +
+                  monthController.text.trim() +
+                  '/' +
+                  yearController.text.trim()));
     }
   }
 
+  Linhvuc _linhvuc = 'bacsi'; // lv = {
+  //   'Linhvuc.bacsi': 'bacsi'
+  // }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -128,7 +132,7 @@ class _BodyState extends State<Body> {
                           if (value!.isEmpty) {
                             addError(error: kUserNameNullError);
                             return "";
-                          } else if (value.length < 4) {
+                          } else if (value.length < 16) {
                             addError(error: kShortNameError);
                             return "";
                           }
@@ -166,11 +170,152 @@ class _BodyState extends State<Body> {
             SizedBox(
               height: getProportionateScreenHeight(30),
             ),
-            Radiobutton(),
+            SizedBox(
+              // height: SizeConfig.screenHeight * 0.3,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Lĩnh vực của bạn là :',
+                    style: PrimaryFont.regular(14).copyWith(
+                        color: AppColors.primaryTextColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MyRadioListTile<Linhvuc>(
+                                value: 'bacsi',
+                                groupValue: _linhvuc,
+                                // leading: 'A',
+                                title: Text('Bác Sĩ'),
+                                onChanged: setNhomNganh,
+                              ),
+                              MyRadioListTile<Linhvuc>(
+                                value: 'duocsi',
+                                groupValue: _linhvuc,
+                                // leading: 'B',
+                                title: Text('Dược Sĩ'),
+                                onChanged: setNhomNganh,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              MyRadioListTile<Linhvuc>(
+                                value: 'nhathuoc',
+                                groupValue: _linhvuc,
+                                // leading: 'C',
+                                title: Text('Nhà Thuốc'),
+                                onChanged: setNhomNganh,
+                              ),
+                              MyRadioListTile<Linhvuc>(
+                                value: 'phongkham',
+                                groupValue: _linhvuc,
+                                // leading: 'D',
+                                title: Text('Phòng Khám'),
+                                onChanged: ((value) {
+                                  setState(() {
+                                    _linhvuc = value!;
+                                    print(value);
+                                  });
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               height: getProportionateScreenHeight(10),
             ),
-            InputBirthDay(),
+            Container(
+              height: 100,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: getProportionateScreenHeight(20),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // SizedBox(
+                      //   height: 50,
+                      //   width: 100,
+                      //   child: TextField(
+                      //     controller: dayController,
+                      //     focusNode: dayFocusNode,
+                      //     decoration: InputDecoration(hintText: 'ngày'),
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: 50,
+                        width: 100,
+                        child: InputTextField(
+                            mycontroller: dayController,
+                            foucusNode: dayFocusNode,
+                            onFiledSubmittedValue: (newValue) {},
+                            onValidator: (value) {
+                              if (value!.isEmpty) {
+                                addError(error: kPassNullError);
+                                return "";
+                              } else if (value > 0 && value < 32) {
+                                addError(error: "hãy nhập đúng ngày sinh");
+                              }
+                            },
+                            keyBoardType: TextInputType.number,
+                            hint: 'ngày...',
+                            obscureText: false),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: 100,
+                        child: InputTextField(
+                            mycontroller: monthController,
+                            foucusNode: monthFocusNode,
+                            onFiledSubmittedValue: (newValue) {},
+                            onValidator: (value) {},
+                            keyBoardType: TextInputType.number,
+                            hint: 'tháng...',
+                            obscureText: false),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        width: 100,
+                        child: InputTextField(
+                            mycontroller: yearController,
+                            foucusNode: yearFocusNode,
+                            onFiledSubmittedValue: (newValue) {},
+                            onValidator: (value) {},
+                            keyBoardType: TextInputType.datetime,
+                            hint: 'năm...',
+                            obscureText: false),
+                      ),
+                    ],
+                  ),
+                  // FormError(errors: errors)
+                ],
+              ),
+            ),
             // SelectedBirthDay(),
             SizedBox(
               height: getProportionateScreenHeight(10),
@@ -182,7 +327,17 @@ class _BodyState extends State<Body> {
               title: 'Đăng ký',
               // loading: provider.loading,
               onPress: () {
-                debugPrint('on Tap');
+                print(RequestAPP.signUpRequest(
+                    fullName: nameController.text.trim(),
+                    phone: phoneController.text.trim(),
+                    is_style: _linhvuc.toString(),
+                    birthday: dayController.text.trim() +
+                        '/' +
+                        monthController.text.trim() +
+                        '/' +
+                        yearController.text.trim()));
+                debugPrint('on Tap + ${_signUp()}');
+                _signUp();
               },
             ),
             SizedBox(
@@ -242,52 +397,21 @@ class _BodyState extends State<Body> {
       ),
     ));
   }
+
+  void setNhomNganh(value) => setState(() {
+        _linhvuc = value;
+        print(value);
+      });
+
+  final Validation _validation = Validation(1);
+
+  bool validate() {
+    bool validation = true;
+
+    if (phoneController.text.trim().isEmpty) {
+      print(_validation);
+    }
+
+    return validation;
+  }
 }
-
-// class Validation {
-//   bool? _isError;
-//   String? _errorMessage;
-//   List<bool>? _validateError;
-//   List<String>? _validateMessages;
-
-//   Validation(int fieldNumber) {
-//     _isError = false;
-//     _errorMessage = '';
-//     _validateError = List.generate(fieldNumber, (index) => false);
-//     _validateMessages = List.generate(fieldNumber, (index) => '');
-//   }
-
-//   String? get errorMessage => _errorMessage;
-//   bool? get isError => _isError;
-//   bool error(index) => _validateError![index];
-//   String message(index) => _validateMessages![index];
-
-//   set errorMessage(String? value) {
-//     _errorMessage = value;
-//   }
-
-//   set isError(bool? value) {
-//     _isError = value;
-//   }
-
-//   _setMessage(index, message) {
-//     _validateMessages![index] = message;
-//   }
-
-//   _setError(index, error) {
-//     _validateError![index] = error;
-//   }
-
-//   showError(MyTextController state, String error, int index) {
-//     state.setError(error);
-//     state.alertError();
-//     _setError(index, true);
-//     _setMessage(index, error);
-//   }
-
-//   clearError(MyTextController state, int index) {
-//     state.resetError();
-//     _setError(index, false);
-//     _setMessage(index, '');
-//   }
-// }

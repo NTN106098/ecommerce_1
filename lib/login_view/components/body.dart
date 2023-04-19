@@ -1,6 +1,11 @@
+import 'package:ecommerce_app_fhh_02/models/validatation.dart';
+import 'package:ecommerce_app_fhh_02/provider/auth_provider.dart';
 import 'package:ecommerce_app_fhh_02/widgets/input_text_field.dart';
+import 'package:ecommerce_app_fhh_02/widgets/my_text_field.dart';
 import 'package:ecommerce_app_fhh_02/widgets/round_button.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../../../utils/utils.dart';
 
@@ -13,11 +18,15 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
   final phoneController = TextEditingController();
+
+  final _phoneState = MyTextController();
 
   final phoneFocusNode = FocusNode();
 
   final List<String> errors = [];
+  final Validation _validation = Validation(1);
 
   @override
   void dispose() {
@@ -119,7 +128,21 @@ class _BodyState extends State<Body> {
               SizedBox(
                 height: getProportionateScreenHeight(40),
               ),
-              RoundButton(title: 'Đăng Nhập', onPress: () {}),
+              ChangeNotifierProvider(
+                create: (_) => LoginController(),
+                child: Consumer<LoginController>(
+                  builder: (context, provider, child) => RoundButton(
+                      title: 'Đăng Nhập',
+                      onPress: () {
+                        if (phoneController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("All Field Required")));
+                        } else {
+                          provider.login(context, phoneController.text);
+                        }
+                      }),
+                ),
+              ),
               // ChangeNotifierProvider(
               //   create: (_) => LoginController(),
               //   child: Consumer<LoginController>(
@@ -183,5 +206,17 @@ class _BodyState extends State<Body> {
         ),
       ),
     );
+  }
+
+  bool validate() {
+    // _validation.clearError(_phoneState, 0);
+
+    bool validation = true;
+
+    if (phoneController.text.trim().isEmpty) {
+      print(_validation);
+    }
+
+    return validation;
   }
 }

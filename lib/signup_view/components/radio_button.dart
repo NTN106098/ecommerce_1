@@ -2,87 +2,102 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/utils.dart';
 
-class Radiobutton extends StatefulWidget {
-  const Radiobutton({super.key});
+// enum Linhvuc { bacsi, duocsi, nhathuoc, phongkham }
 
-  @override
-  State<Radiobutton> createState() => _RadiobuttonState();
-}
+// class Radiobutton extends StatefulWidget {
+//   const Radiobutton({super.key});
 
-class _RadiobuttonState extends State<Radiobutton> {
-  int _value = 1;
+//   @override
+//   State<Radiobutton> createState() => _RadiobuttonState();
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    // SizeConfig().init(context);
-    return SizedBox(
-      // height: SizeConfig.screenHeight * 0.3,
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Lĩnh vực của bạn là :',
-            style: PrimaryFont.regular(14).copyWith(
-                color: AppColors.primaryTextColor, fontWeight: FontWeight.bold),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MyRadioListTile<int>(
-                      value: 1,
-                      groupValue: _value,
-                      // leading: 'A',
-                      title: Text('Bác Sĩ'),
-                      onChanged: setNhomNganh,
-                    ),
-                    MyRadioListTile<int>(
-                      value: 2,
-                      groupValue: _value,
-                      // leading: 'B',
-                      title: Text('Dược Sĩ'),
-                      onChanged: setNhomNganh,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    MyRadioListTile<int>(
-                      value: 3,
-                      groupValue: _value,
-                      // leading: 'C',
-                      title: Text('Nhà Thuốc'),
-                      onChanged: setNhomNganh,
-                    ),
-                    MyRadioListTile<int>(
-                      value: 4,
-                      groupValue: _value,
-                      // leading: 'D',
-                      title: Text('Phòng Khám'),
-                      onChanged: setNhomNganh,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+// class _RadiobuttonState extends State<Radiobutton> {
+//   // int _value = 1;
+//   Linhvuc _linhvuc = Linhvuc.bacsi;
 
-  void setNhomNganh(value) => setState(() => _value = value!);
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     // SizeConfig().init(context);
+//     return SizedBox(
+//       // height: SizeConfig.screenHeight * 0.3,
+//       width: double.infinity,
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Text(
+//             'Lĩnh vực của bạn là :',
+//             style: PrimaryFont.regular(14).copyWith(
+//                 color: AppColors.primaryTextColor, fontWeight: FontWeight.bold),
+//           ),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Expanded(
+//                 child: SizedBox(
+//                   child: Column(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       MyRadioListTile<Linhvuc>(
+//                         value: Linhvuc.bacsi,
+//                         groupValue: _linhvuc,
+//                         // leading: 'A',
+//                         title: Text('Bác Sĩ'),
+//                         onChanged: setNhomNganh,
+//                       ),
+//                       MyRadioListTile<Linhvuc>(
+//                         value: Linhvuc.duocsi,
+//                         groupValue: _linhvuc,
+//                         // leading: 'B',
+//                         title: Text('Dược Sĩ'),
+//                         onChanged: setNhomNganh,
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//               Expanded(
+//                 child: SizedBox(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       MyRadioListTile<Linhvuc>(
+//                         value: Linhvuc.nhathuoc,
+//                         groupValue: _linhvuc,
+//                         // leading: 'C',
+//                         title: Text('Nhà Thuốc'),
+//                         onChanged: setNhomNganh,
+//                       ),
+//                       MyRadioListTile<Linhvuc>(
+//                         value: Linhvuc.phongkham,
+//                         groupValue: _linhvuc,
+//                         // leading: 'D',
+//                         title: Text('Phòng Khám'),
+//                         onChanged: ((value) {
+//                           setState(() {
+//                             _linhvuc = value!;
+//                             // print(value);
+//                           });
+//                         }),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   void setNhomNganh(value) => setState(() {
+//         _linhvuc = value;
+//         print(value);
+//       });
+// }
 
 class MyRadioListTile<T> extends StatelessWidget {
   final T value;

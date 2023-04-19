@@ -1,5 +1,6 @@
 import 'package:ecommerce_app_fhh_02/widgets/input_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../utils/utils.dart';
 
@@ -47,6 +48,17 @@ class _InputBirthDayState extends State<InputBirthDay> {
         errors.remove(error);
       });
   }
+//  DateTime selectedDate = DateTime.now();
+//   TextEditingController _date = new TextEditingController();
+
+//   Future<Null> _selectedDate(BuildContext context) async {
+//     DateFormat formatter = DateFormat('dd/MM/yyyy');
+//     final DateTime picker = await showDatePicker(
+//         context: context,
+//         initialDate: selectedDate,
+//         firstDate: DateTime(1950,1),
+//         lastDate:DateTime(2100) );
+//   }
 
   @override
   Widget build(BuildContext context) {
